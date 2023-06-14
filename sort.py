@@ -11,8 +11,10 @@ def process_folder(folder_path):
     archive_extensions = ("zip", "gz", "tar")
     known_extensions = set()
     unknown_extensions = set()
+    iter_numb = 0
 
     for root, dirs, files in os.walk(folder_path):
+        iter_numb += 1
         if any(
             folder in root
             for folder in ["archives", "video", "audio", "documents", "images"]
@@ -56,7 +58,16 @@ def process_folder(folder_path):
 
             destination_folder_path = os.path.join(folder_path, destination_folder)
             os.makedirs(destination_folder_path, exist_ok=True)
-            shutil.move(normalized_file_path, destination_folder_path)
+            try:
+                shutil.move(normalized_file_path, destination_folder_path)
+            except shutil.Error:
+                normalized_file_name = (
+                    str(iter_numb) + normalize(file_name) + "." + file_extension
+                )
+                normalized_file_path = os.path.join(root, normalized_file_name)
+                os.rename(file_path, normalized_file_path)
+                shutil.move(normalized_file_path, destination_folder_path)
+
     for root, dirs, files in os.walk(folder_path):
         for dir in dirs:
             folder_path = os.path.join(root, dir)

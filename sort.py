@@ -64,9 +64,9 @@ def process_folder(folder_path):
                 normalized_file_name = (
                     str(iter_numb) + normalize(file_name) + "." + file_extension
                 )
-                normalized_file_path = os.path.join(root, normalized_file_name)
-                os.rename(file_path, normalized_file_path)
-                shutil.move(normalized_file_path, destination_folder_path)
+                normalized_file_path_new = os.path.join(root, normalized_file_name)
+                os.rename(normalized_file_path, normalized_file_path_new)
+                shutil.move(normalized_file_path_new, destination_folder_path)
 
     for root, dirs, files in os.walk(folder_path):
         for dir in dirs:
